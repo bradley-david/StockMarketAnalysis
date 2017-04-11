@@ -1,7 +1,7 @@
 
 import com.google.gson.*;
 
-import java.io.File;
+import java.io.*;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Scanner;
@@ -21,7 +21,16 @@ public class ParseQuotes {
 
         try {
             URL url = new URL(SITE + "function=" + function + "&symbol=" + symbol + "&outputsize=" + outputsize + "&apikey=" + API_KEY);
-        }catch (Throwable ex) {
+            //Testing
+/*	    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+	    String inputLine;
+	    while ((inputLine = in.readLine()) != null)
+		System.out.println(inputLine);
+	    in.close(); */
+        }
+
+	catch (Throwable ex) {
             ex.printStackTrace();
         }
 
