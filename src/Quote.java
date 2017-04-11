@@ -1,5 +1,5 @@
 
-public abstract class Quote {
+public class Quote {
     String symbol;
     
 }
