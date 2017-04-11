@@ -21,18 +21,32 @@ public class ParseQuotes {
 
         try {
             URL url = new URL(SITE + "function=" + function + "&symbol=" + symbol + "&outputsize=" + outputsize + "&apikey=" + API_KEY);
-            //Testing
-/*	    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-	    String inputLine;
-	    while ((inputLine = in.readLine()) != null)
-		System.out.println(inputLine);
-	    in.close(); */
+	    System.out.println(readURL(url));
         }
 
 	catch (Throwable ex) {
             ex.printStackTrace();
         }
 
+    }
+
+    /*Takes a URL and returns a string of all data from the URL*/
+    public static String readURL(URL url)  {
+        try {
+	    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+	    StringBuffer buffer = new StringBuffer();
+	    String newLine;
+	    
+	    while ((newLine = reader.readLine()) != null) {
+		buffer.append(newLine);
+	    }
+	    
+	    return buffer.toString();
+	}
+	catch (Throwable ex) {
+	    ex.printStackTrace();
+	}
+	
+	return null;
     }
 }
