@@ -1,9 +1,11 @@
+
+import java.util.Date;
+
 /**
  * Created by David on 4/10/2017.
  */
-public class TimeSeriesDaily extends Quote{
-    String date;
-    //array indices are open,high,low,close,volume
+public class TimeSeriesDaily extends Quote {
+    Date date;
     double open;
     double high;
     double low;
@@ -12,6 +14,20 @@ public class TimeSeriesDaily extends Quote{
     
     public TimeSeriesDaily() {
     
+    }
+    
+    @Override
+    public String toString() {
+        String ret = "\n\nTIME_SERIES_DAILY data point: ";
+        if (date != null) {
+            ret += "\nDATE: " + date.toString();
+        }
+        ret += "\nOPEN: " + open;
+        ret += "\nHIGH: " + high;
+        ret += "\nLOW: " + low;
+        ret += "\nCLOSE: " + close;
+        ret += "\nVOLUME: " + volume;
+        return ret;
     }
     
 }
