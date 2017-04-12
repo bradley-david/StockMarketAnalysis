@@ -26,6 +26,8 @@ public class DataFetcher {
     
     public static final String ALPHA_VANTAGE_SITE = "http://www.alphavantage.co/query?";
 
+    //not yet implemented
+    
 //    public static ArrayList<TimeSeriesDaily> getTimeSeriesDaily() {
 //
 //    }
