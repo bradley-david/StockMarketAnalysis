@@ -1,13 +1,12 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
-import com.google.gson.*;
-import com.google.gson.reflect.*;
-
-import java.io.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,9 @@ public class ParseQuotes {
         String function = "TIME_SERIES_DAILY";
         String outputsize = "compact";
         
-        
         try {
             URL url = new URL(SITE + "function=" + function + "&symbol=" + symbol + "&outputsize=" + outputsize + "&apikey=" + API_KEY);
-            String s = readURL(url);
+            String s = DataFetcher.readURL(url);
             //get rid of notation like "1. open" to be just "open"
             s = s.replaceAll("\"\\d\\. ", "\"");
             System.out.println(s);
@@ -56,22 +54,5 @@ public class ParseQuotes {
         
     }
     
-    /*Takes a URL and returns a string of all data from the URL*/
-    public static String readURL(URL url) {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            String newLine;
-            
-            while ((newLine = reader.readLine()) != null) {
-                buffer.append(newLine);
-            }
-            
-            return buffer.toString();
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
-        
-        return null;
-    }
+    
 }
