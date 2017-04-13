@@ -1,13 +1,12 @@
-
-
+package Quote;
 
 public class TimeSeriesDaily extends Quote {
-
-    double open;
-    double high;
-    double low;
-    double close;
-    double volume;
+    
+    public double open;
+    public double high;
+    public double low;
+    public double close;
+    public double volume;
     
     public TimeSeriesDaily() {
     

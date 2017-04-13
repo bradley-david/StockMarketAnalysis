@@ -1,15 +1,5 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class ParseQuotes {
@@ -23,35 +13,9 @@ public class ParseQuotes {
         String symbol = sc.nextLine();
         String function = "TIME_SERIES_DAILY";
         String outputsize = "compact";
-        
-        try {
-            URL url = new URL(SITE + "function=" + function + "&symbol=" + symbol + "&outputsize=" + outputsize + "&apikey=" + API_KEY);
-            String s = DataFetcher.readURL(url);
-            //get rid of notation like "1. open" to be just "open"
-            s = s.replaceAll("\"\\d\\. ", "\"");
-            System.out.println(s);
-            Gson gson = new Gson();
-            
-            Type type1 = new TypeToken<Map<String, JsonElement>>() {
-            }.getType();
-            Map<String, JsonElement> map1 = gson.fromJson(s, type1);
-            Type type2 = new TypeToken<Map<String, TimeSeriesDaily>>() {
-            }.getType();
-            Map<String, TimeSeriesDaily> map2 = gson.fromJson(map1.get(LookupTable.lookupFunction(function)), type2);
-            List<TimeSeriesDaily> list = new ArrayList<>(map2.size());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            
-            for (Map.Entry<String, TimeSeriesDaily> e : map2.entrySet()) {
-                e.getValue().date = sdf.parse(e.getKey());
-                list.add(e.getValue());
-            }
-            
-            System.out.println(list);
-            
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
-        
+        System.out.println(DataFetcher.getTimeSeriesDaily(symbol, OutputSize.valueOf(outputsize.toUpperCase())));
+    
+    
     }
     
     

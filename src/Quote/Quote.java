@@ -1,9 +1,11 @@
+package Quote;
+
 import java.util.Date;
 
 public abstract class Quote {
     
-    String symbol;
-    Date date;
+    public String symbol;
+    public Date date;
     
     @Override
     public String toString() {
