@@ -61,7 +61,7 @@ public class DataFetcher {
             ArrayList<TimeSeriesDaily> list = new ArrayList<>(map2.size());
             
             for (Map.Entry<String, TimeSeriesDaily> e : map2.entrySet()) {
-                e.getValue().date = yyyymmdd.parse(e.getKey());
+                e.getValue().setDate(yyyymmdd.parse(e.getKey()));
                 list.add(e.getValue());
             }
             return list;
