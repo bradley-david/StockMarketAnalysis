@@ -1,4 +1,4 @@
 
 public enum OutputSize {
-    COMPACT, FULL
+    compact, full
 }

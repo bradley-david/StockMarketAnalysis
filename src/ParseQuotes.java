@@ -12,8 +12,9 @@ public class ParseQuotes {
         System.out.println("Enter your stock symbol: ");
         String symbol = sc.nextLine();
         String function = "TIME_SERIES_DAILY";
-        String outputsize = "compact";
-        System.out.println(DataFetcher.getTimeSeriesDaily(symbol, OutputSize.valueOf(outputsize.toUpperCase())));
+        System.out.println("Do you want full or compact output?");
+        String outputsize = sc.nextLine();
+        System.out.println(DataFetcher.getTimeSeriesDaily(symbol, OutputSize.valueOf(outputsize.toLowerCase())));
     
     
     }
