@@ -8,4 +8,8 @@ public class Specie {
 		theta1 = t1;
 		theta2 = t2;
 	}
+
+	public String toString() {
+		return "theta1 = " + theta1 + ", theta2 = " + theta2 + ", fitness = " + fitness;
+	}
 }
