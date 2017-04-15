@@ -1,6 +1,7 @@
 import Quote.TimeSeriesDaily;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GeneticAlg {
 
@@ -27,6 +28,7 @@ public class GeneticAlg {
 			s.fitness = getFitness(s);
 		}
 
+		Collections.sort(population, (l, r) -> (l.fitness - r.fitness) >= 0 ? -1 : 1);
 		for (Specie s : population) {
 			System.out.println(s);
 		}
@@ -56,7 +58,7 @@ public class GeneticAlg {
 	}
 
 	public static ArrayList<Specie> initPop(int popSize, int daysBack) {
-		ArrayList<Specie> returnlist = new ArrayList<Specie>();
+		ArrayList<Specie> returnlist = new ArrayList<>();
 		for (int i = 0; i < popSize; i++) {
 			int theta1 = (int) (Math.random() * (daysBack - 1));
 			int theta2 = (int) (Math.random() * (daysBack - theta1) + theta1);
