@@ -1,5 +1,6 @@
-import java.util.ArrayList;;
-import Quote.*;
+import Quote.TimeSeriesDaily;
+
+import java.util.ArrayList;
 
 public class GeneticAlg {
 
@@ -11,7 +12,7 @@ public class GeneticAlg {
 	static int period = 10;
 	static ArrayList<TimeSeriesDaily> stocks;
 
-	public static void main (String[] args) {
+	public static void main(String[] args) {
 		//Get Stock Prices
 		print("Fetching Stock Prices...");
 		stocks = DataFetcher.getTimeSeriesDaily(SYMBOL, outputSize);
@@ -22,16 +23,19 @@ public class GeneticAlg {
 
 		//Evaluate Fitness
 		print("Evaluating fitness...");
-		for (Specie s : population)
+		for (Specie s : population) {
 			s.fitness = getFitness(s);
-		
-		for (Specie s : population)
+		}
+
+		for (Specie s : population) {
 			System.out.println(s);
+		}
 	}
+
 	public static double getMovingAverage(int theta) {
 		double sum = 0;
 		for (int i = 0; i < theta; i++) {
-			sum += stocks.get(period + i).getClose();	
+			sum += stocks.get(period + i).getClose();
 		}
 
 		return sum / theta;
@@ -40,15 +44,15 @@ public class GeneticAlg {
 	public static double getFitness(Specie s) {
 		int t1 = s.theta1;
 		int t2 = s.theta2;
-		
+
 		int buyIndicator = getMovingAverage(t1) > getMovingAverage(t2) ? 1 : -1;
 		double fitness = 1.0;
 
 		for (int day = 1; day < period; day++) {
-			fitness *= 1 + buyIndicator * ((stocks.get(day).getClose() - stocks.get(day - 1).getClose()) / stocks.get(day - 1).getClose());		
+			fitness *= 1 + buyIndicator * ((stocks.get(day).getClose() - stocks.get(day - 1).getClose()) / stocks.get(day - 1).getClose());
 		}
-		
-		return fitness;		
+
+		return fitness;
 	}
 
 	public static ArrayList<Specie> initPop(int popSize, int daysBack) {
@@ -64,8 +68,9 @@ public class GeneticAlg {
 	}
 
 	public static void print(String s) {
-		if (diag)
+		if (diag) {
 			System.out.println(s);
+		}
 	}
 }
 
