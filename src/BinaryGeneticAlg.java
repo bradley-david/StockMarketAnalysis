@@ -1,5 +1,6 @@
 import Quote.TimeSeriesDaily;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,18 +14,23 @@ Implementation of genetic algorithm using binary strings to represent solutions
  */
 
 public class BinaryGeneticAlg {
-	static final int POPULATION_SIZE = 100;
-	static final double MUTATION_RATE = 0.05;
-	static final double CROSSOVER_RATE = 0.85;
-	static final int MAX_GENERATIONS = 450;
-	static final int LOOKBACK_DAYS = 250;
-	static final int MAX_SMA_DAYS = 250;
+	static int POPULATION_SIZE = 100;
+	static double MUTATION_RATE = 0.05;
+	static double CROSSOVER_RATE = 0.85;
+	static int MAX_GENERATIONS = 450;
+	static int LOOKBACK_DAYS = 10;
+	static int MAX_SMA_DAYS = 250;
+	static final DecimalFormat SIXTEEN_ZEROS = new DecimalFormat("0000000000000000");
 	static ArrayList<TimeSeriesDaily> quotes;
+
 
 	public static void main(String[] cheese) {
 		out.println("Enter your stock ticker: ");
 		quotes = DataFetcher.getTimeSeriesDaily(new Scanner(in).nextLine(), OutputSize.full);
-		out.println(getSimpleMovingAverage(0, 50));
+		LOOKBACK_DAYS = 30;
+		Individual ind = new Individual(10, 20);
+		out.println(profit(ind));
+
 	}
 
 
@@ -38,14 +44,28 @@ public class BinaryGeneticAlg {
 	static double profit(Individual ind) {
 		boolean invested = false;
 		boolean switchPosition = false;
+		int startOfBuyPeriod = 0;
+		double returns = 0;
+		out.println(quotes.get(LOOKBACK_DAYS - 1));
+		for (int day = LOOKBACK_DAYS - 1; day >= 0; day--) {
+			double smallSMA = getSimpleMovingAverage(day, ind.getTheta1());
+			double largeSMA = getSimpleMovingAverage(day, ind.getTheta2());
+			//signifies positive crossover - not currently holding stock, so must have previously had short SMA below long SMA 
+			if (smallSMA > largeSMA && !invested) {
+				invested = true; // buy the stock
+				startOfBuyPeriod = day;
 
-		for (int day = LOOKBACK_DAYS - 1; day > 0; day--) {
-			TimeSeriesDaily d1 = quotes.get(day);
-			TimeSeriesDaily d2 = quotes.get(day + 1);
-
+			} else if (smallSMA <= largeSMA && invested) {    // signifies negative SMA crossover - the shorter SMA is now lower than the long-run SMA, meaning the stock is trending downward
+				invested = false; //sell the stock
+				returns += quotes.get(day).getClose() - quotes.get(startOfBuyPeriod).getClose();
+			}
 		}
 
-		return 0;
+		//if we are invested today (at the end of the period we are analyzing), sell that stock
+		if (invested) {
+			returns += quotes.get(0).getClose() - quotes.get(startOfBuyPeriod).getClose();
+		}
+		return returns;
 	}
 
 	/**
@@ -61,9 +81,33 @@ public class BinaryGeneticAlg {
 		return ret / (theta);
 	}
 
+	/*
+	class that represents an individual possible solution in the genetic algorithm model. Encodes theta1 and theta2 as 16bit integers concatenated together in the string called "binary" to allow crossover and mutation operations
+	Theta1 and theta2 respectively represent the lengths of the short and long simple moving averages.
+	 */
 
 	private static class Individual {
+
 		String binary;
 		double fitness;
+
+		public Individual(int theta1, int theta2) {
+			if (theta1 > Short.MAX_VALUE * 2 - 1 || theta2 > Short.MAX_VALUE * 2 - 1) {
+				throw new IllegalArgumentException();
+			}
+			binary = String.format("%16s", Integer.toBinaryString(theta1)).replace(' ', '0')
+					+ String.format("%16s", Integer.toBinaryString(theta2)).replace(' ', '0');
+		}
+
+		int getTheta1() {
+			return Integer.parseInt(binary.substring(0, 16), 2);
+		}
+
+		int getTheta2() {
+			return Integer.parseInt(binary.substring(16, 32), 2);
+
+		}
+
+
 	}
 }
