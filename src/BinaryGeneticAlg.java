@@ -30,6 +30,7 @@ public class BinaryGeneticAlg {
 		ArrayList<TimeSeriesDaily> quotes = DataFetcher.getTimeSeriesDaily(s, OutputSize.full);
 		BinaryGeneticAlg alg = new BinaryGeneticAlg(s, quotes, 100, 0.01, 0.85, 1000, 365);
 		out.println(alg.profit(new BinaryGeneticAlg.Individual(10, 30)));
+		out.println(quotes.get(alg.LOOKBACK_DAYS - 1));
 		alg.simulate();
 	}
 
@@ -217,12 +218,23 @@ public class BinaryGeneticAlg {
 			int crossoverPoint = (int) (Math.random() * Individual.CHROMOSOME_LENGTH);
 			String t1 = i1.binary.substring(0, crossoverPoint) + i2.binary.substring(crossoverPoint, Individual.CHROMOSOME_LENGTH);
 			String t2 = i2.binary.substring(0, crossoverPoint) + i1.binary.substring(crossoverPoint, Individual.CHROMOSOME_LENGTH);
+			String t3 = i1.binary;
+			String t4 = i2.binary;
 			i1.binary = t1;
 			i2.binary = t2;
+
+			//the crossover and mutation operations sometimes create values of theta1 greater than theta2, which is of course nonsense. this takes care of that
+			if (i1.getTheta1() >= i1.getTheta2()) {
+				i1.binary = t3;
+			}
+			if (i2.getTheta1() >= i2.getTheta2()) {
+				i2.binary = t3;
+			}
 		}
 	}
 
 	public static void mutate(Individual ind, double mutationRate) {
+		String temp = ind.binary;
 		char[] s = ind.binary.toCharArray();
 		for (int i = 0; i < s.length; i++) {
 			if (Math.random() < mutationRate) {
@@ -234,6 +246,11 @@ public class BinaryGeneticAlg {
 			}
 		}
 		ind.binary = new String(s);
+
+		//the crossover and mutation operations sometimes create values of theta1 greater than theta2, which is of course nonsense. this takes care of this,
+		if (ind.getTheta1() >= ind.getTheta2()) {
+			ind.binary = temp;
+		}
 	}
 
 }
