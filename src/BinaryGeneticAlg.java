@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static java.lang.System.in;
 import static java.lang.System.out;
 
 /*
@@ -25,10 +24,13 @@ public class BinaryGeneticAlg {
 
 
 	public static void main(String[] cheese) {
+		Scanner sc = new Scanner(System.in);
 		out.println("Enter your stock ticker: ");
-		String s = new Scanner(in).nextLine();
+		String s = sc.nextLine();
+		out.println("How far back in time do you want to look?");
+		int days = Integer.parseInt(sc.nextLine());
 		ArrayList<TimeSeriesDaily> quotes = DataFetcher.getTimeSeriesDaily(s, OutputSize.full);
-		BinaryGeneticAlg alg = new BinaryGeneticAlg(s, quotes, 100, 0.01, 0.85, 1000, 365);
+		BinaryGeneticAlg alg = new BinaryGeneticAlg(s, quotes, 100, 0.01, 0.85, 1000, days);
 		out.println(alg.profit(new BinaryGeneticAlg.Individual(10, 30)));
 		out.println(quotes.get(alg.LOOKBACK_DAYS - 1));
 		alg.simulate();
@@ -50,7 +52,7 @@ public class BinaryGeneticAlg {
 
 	}
 
-	public void simulate() {
+	public Individual simulate() {
 		int maxProfit = 0; // THIS IS FOR TESTING. Delete it later!
 
 		if (quotes.size() == 0) { //hasn't been initialized, throw an exception
@@ -108,7 +110,7 @@ public class BinaryGeneticAlg {
 						+ ": " + best
 						+ "\nIt would return a profit of $" + String.format("%.2f", best.fitness) + " per share with the crossing of moving averages technique."
 		);
-
+		return best;
 
 	}
 
@@ -193,7 +195,7 @@ public class BinaryGeneticAlg {
 
 		@Override
 		public String toString() {
-			return "\nSmall SMA length: " + getTheta1() + " Large SMA length: " + getTheta2();
+			return "\nSmall SMA length: " + getTheta1() + " Large SMA length: " + getTheta2() + " Profit: " + String.format("%.2f", fitness);
 		}
 	}
 
