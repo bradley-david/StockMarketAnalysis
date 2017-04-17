@@ -27,7 +27,7 @@ public class TestGeneticAlgorithm {
 			BinaryGeneticAlg.Individual ind = alg.simulate();
 			results.add(ind);
 		}
-		Collections.sort(results, (l, r) -> (l.fitness - r.fitness) >= 0 ? -1 : 1);
+		Collections.sort(results, (l, r) -> (l.fitness - r.fitness) >= 0 ? 1 : -1);
 		out.println("FINAL RESULT: " + results.get(results.size() - 1));
 		out.println(results);
 	}

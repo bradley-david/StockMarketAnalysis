@@ -218,7 +218,7 @@ public class BinaryGeneticAlg {
 				return population.get(i);
 			}
 		}
-		return population.parallelStream().max((l, r) -> (l.fitness - r.fitness) >= 0 ? -1 : 1).orElse(null);
+		return population.parallelStream().max((l, r) -> (l.fitness - r.fitness) >= 0 ? 1 : -1).orElse(null);
 	}
 
 	public static Individual maxSample(ArrayList<Individual> population, int rank) {
