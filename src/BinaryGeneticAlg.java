@@ -1,6 +1,7 @@
 import Quote.TimeSeriesDaily;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -53,7 +54,6 @@ public class BinaryGeneticAlg {
 	}
 
 	public Individual simulate() {
-		int maxProfit = 0; // THIS IS FOR TESTING. Delete it later!
 
 		if (quotes.size() == 0) { //hasn't been initialized, throw an exception
 			throw new RuntimeException("Unable to find stock quotes!");
@@ -81,8 +81,14 @@ public class BinaryGeneticAlg {
 			int cPop = 0;
 			while (cPop < POPULATION_SIZE) {
 				cPop += 2;
-				Individual offspring1 = rouletteSample(totalFitness, pool);    //sample from current population
-				Individual offspring2 = rouletteSample(totalFitness, pool);
+
+//
+//				Individual offspring1 = rouletteSample(totalFitness, pool);    //sample from current population
+//				Individual offspring2 = rouletteSample(totalFitness, pool);
+//
+				Individual offspring1 = maxSample(pool, 1);    //sample from current population
+				Individual offspring2 = maxSample(pool, 2);
+
 				crossover(offspring1, offspring2, CROSSOVER_RATE);    //cross over their chromosomes
 				mutate(offspring1, MUTATION_RATE);        //mutate each one
 				mutate(offspring2, MUTATION_RATE);
@@ -214,6 +220,12 @@ public class BinaryGeneticAlg {
 		}
 		return population.parallelStream().max((l, r) -> (l.fitness - r.fitness) >= 0 ? -1 : 1).orElse(null);
 	}
+
+	public static Individual maxSample(ArrayList<Individual> population, int rank) {
+		Collections.sort(population, (l, r) -> (l.fitness - r.fitness) >= 0 ? -1 : 1);
+		return population.get(population.size() - rank);
+	}
+
 
 	public static void crossover(Individual i1, Individual i2, double crossoverRate) {
 		if (Math.random() < crossoverRate) {
